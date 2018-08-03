@@ -1,0 +1,26 @@
+#!/usr/bin/python
+import os
+import pylast
+import time
+import datetime
+import sys
+
+API_KEY = "your api info"
+API_SECRET = "your api info"
+username = "your un"
+password_hash = pylast.md5("your pw")
+#create network object
+network = pylast.LastFMNetwork(api_key = API_KEY, api_secret = API_SECRET, username = username, password_hash = password_hash)
+alb = sys.argv[1]
+art = sys.argv[2]
+def scrobb():
+    album = pylast.Album(artist=art,title=alb, network=network)
+    trcks = album.get_tracks()
+    for t in trcks:
+        uts = int(time.mktime(datetime.datetime.now().timetuple()))
+        network.scrobble(artist=t.artist, title=t.title, timestamp=uts)
+def play():
+    os.system('tizonia --spotify-album \'' + alb + ' ' + art + '\'')
+#   os.system('tizonia --spotify-username un --spotify-password pw --spotify-album \'' + alb + ' ' + art + '\'')
+scrobb()
+play()
